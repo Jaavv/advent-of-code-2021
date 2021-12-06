@@ -15,7 +15,10 @@ fun main() {
         }
 
     fun markDrawnNumber(row: MutableList<String>, number: String) {
-        row[row.indexOf(number)] = "$number*"
+        val noIndex = row.withIndex().filter { it.value == number }.map { it.index }
+        for (i in noIndex) {
+            row[i] = "$number*"
+        }
     }
 
     fun rowBingoCheck(row: MutableList<String>): Boolean {
@@ -32,11 +35,17 @@ fun main() {
         var winningBoard: List<MutableList<String>> = mutableListOf()
         drawNo@ for (n in numbers) {
             for (board in board1) {
-                for ((rIndex, row) in board.withIndex()) {
+                for (row in board) {
                     if (row.contains(n)) {
                         markDrawnNumber(row, n)
+                        val colIndex = row.withIndex().filter { it.value == "$n*" }.map { it.index }
                         val rowBingo = rowBingoCheck(row)
-                        val colBingo = colBingoCheck(board, rIndex)
+                        var colBingo = false
+                        colCheck@ for (c in colIndex) {
+                            if (colBingoCheck(board, c))
+                                colBingo = true
+                            break@colCheck
+                        }
                         if (rowBingo || colBingo) {
                             winningBoard = board
                             currentNumber = n.toInt()
@@ -50,7 +59,7 @@ fun main() {
         println("WINNING NUMBER: $currentNumber * UNMARKED BOARD SUM: $sumOfUnmarked")
         return currentNumber * sumOfUnmarked
     }
-    println("FINAL SCORE: ${part1(drawnNumbers, board)}")
+    println("FINAL SCORE: ${part1(drawnNumbers, board)}") // 34506
 
     fun part2() {
         TODO()
