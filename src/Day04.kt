@@ -61,8 +61,33 @@ fun main() {
     }
     println("FINAL SCORE: ${part1(drawnNumbers, board)}") // 34506
 
-    fun part2() {
-        TODO()
+    fun part2(numbers: List<String>, board: List<List<List<String>>>): Int {
+        var board2 = board.map { it -> it.map { it.toMutableList() }.toMutableList() }.toMutableList()
+        var currentNumber = 0
+        var winningBoards: MutableList<Int> = mutableListOf()
+        for (n in numbers) {
+            drawBoard@ for ((bIndex, board) in board2.withIndex()) {
+                if (winningBoards.contains(bIndex)) {
+                    continue
+                } else {
+                    for (row in board) {
+                        if (row.contains(n)) {
+                            val rowIndex = row.indexOf(n)
+                            row[rowIndex] = "$n*"
+                            val colIndex = row.indexOf("$n*")
+                            if (rowBingoCheck(row) || colBingoCheck(board, colIndex)) {
+                                winningBoards.add(bIndex)
+                                currentNumber = n.toInt()
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        val sumOfLastWinning =
+            board2.get(winningBoards.last()).flatten().filter { !it.contains("*") }.sumOf { it.toInt() }
+        println("LAST WINNING NUMBER: $currentNumber * LAST UNMARKED BOARD SUM: $sumOfLastWinning")
+        return currentNumber * sumOfLastWinning
     }
+    println("FINAL SCORE: ${part2(drawnNumbers, board)}") // 7686
 }
-
