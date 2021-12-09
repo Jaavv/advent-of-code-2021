@@ -14,7 +14,7 @@ class Lanternfish constructor(private var timer: Int) {
 
     private var resetState = false
 
-    fun getState(): Boolean {
+    fun getResetState(): Boolean {
         return this.resetState
     }
 
@@ -63,7 +63,7 @@ class Day06Part1(input: List<Int>) {
         day += 1
         newSpawn = false
         listOfFishes.map { it.countDown() }
-        val spawn = listOfFishes.filter { it.getState() }.size
+        val spawn = listOfFishes.filter { it.getResetState() }.size
         if (spawn > 0) spawnNewFishes(spawn)
     }
 
